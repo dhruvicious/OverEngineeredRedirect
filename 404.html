@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>404 — lrd</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0d0d0d;
+      --surface: #141414;
+      --border: #1f1f1f;
+      --green: #00ff88;
+      --green-dim: #00ff8844;
+      --red: #ff4545;
+      --muted: #444;
+      --text: #c8c8c8;
+      --font: 'JetBrains Mono', monospace;
+    }
+
+    html, body {
+      height: 100%;
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font);
+      font-size: 14px;
+      line-height: 1.6;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    /* scanline overlay */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0,0,0,0.08) 2px,
+        rgba(0,0,0,0.08) 4px
+      );
+      pointer-events: none;
+      z-index: 10;
+    }
+
+    .terminal {
+      width: min(680px, 92vw);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      box-shadow: 0 0 0 1px #000, 0 32px 80px rgba(0,0,0,0.8), 0 0 60px var(--green-dim);
+      overflow: hidden;
+      animation: rise 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(16px) scale(0.98); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .titlebar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 16px;
+      background: #111;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .dot {
+      width: 12px; height: 12px;
+      border-radius: 50%;
+    }
+    .dot.red    { background: #ff5f57; }
+    .dot.yellow { background: #febc2e; }
+    .dot.green  { background: #28c840; }
+
+    .titlebar-label {
+      margin-left: auto;
+      margin-right: auto;
+      transform: translateX(-18px);
+      color: var(--muted);
+      font-size: 12px;
+      letter-spacing: 0.05em;
+    }
+
+    .body {
+      padding: 28px 32px 36px;
+    }
+
+    .line {
+      opacity: 0;
+      animation: fadein 0.2s forwards;
+    }
+
+    .line:nth-child(1)  { animation-delay: 0.1s; }
+    .line:nth-child(2)  { animation-delay: 0.3s; }
+    .line:nth-child(3)  { animation-delay: 0.5s; }
+    .line:nth-child(4)  { animation-delay: 0.7s; }
+    .line:nth-child(5)  { animation-delay: 0.9s; }
+    .line:nth-child(6)  { animation-delay: 1.1s; }
+    .line:nth-child(7)  { animation-delay: 1.3s; }
+    .line:nth-child(8)  { animation-delay: 1.5s; }
+
+    @keyframes fadein {
+      to { opacity: 1; }
+    }
+
+    .prompt { color: var(--green); }
+    .cmd    { color: #fff; }
+    .err    { color: var(--red); }
+    .comment { color: var(--muted); }
+    .spacer { height: 16px; }
+    .link-line { margin-top: 4px; }
+
+    a.goto {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 20px;
+      padding: 10px 20px;
+      border: 1px solid var(--green);
+      color: var(--green);
+      text-decoration: none;
+      font-family: var(--font);
+      font-size: 13px;
+      letter-spacing: 0.08em;
+      border-radius: 4px;
+      transition: background 0.15s, box-shadow 0.15s;
+      opacity: 0;
+      animation: fadein 0.3s 1.7s forwards;
+    }
+
+    a.goto:hover {
+      background: var(--green-dim);
+      box-shadow: 0 0 16px var(--green-dim);
+    }
+
+    a.goto::before { content: '→ '; }
+
+    .cursor {
+      display: inline-block;
+      width: 8px; height: 14px;
+      background: var(--green);
+      vertical-align: middle;
+      margin-left: 2px;
+      animation: blink 1s step-end infinite;
+      opacity: 0;
+      animation-delay: 1.6s;
+      animation-fill-mode: forwards;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+  <div class="terminal">
+    <div class="titlebar">
+      <span class="dot red"></span>
+      <span class="dot yellow"></span>
+      <span class="dot green"></span>
+      <span class="titlebar-label">bash — lrd.bedhruvicious.co.in</span>
+    </div>
+    <div class="body">
+      <div class="line"><span class="prompt">~ $</span> <span class="cmd">curl lrd.bedhruvicious.co.in<span id="typed-path"></span></span></div>
+      <div class="line spacer"></div>
+      <div class="line"><span class="err">Error 404: route not found</span></div>
+      <div class="line"><span class="comment"># only one endpoint exists here</span></div>
+      <div class="line spacer"></div>
+      <div class="line"><span class="prompt">~ $</span> <span class="cmd">curl lrd.bedhruvicious.co.in/daily</span></div>
+      <div class="line"><span class="comment"># 302 → today's leetcode daily</span></div>
+      <div class="line"><span class="prompt">~ $</span> <span class="cursor"></span></div>
+      <a class="goto" href="/daily">go to /daily</a>
+    </div>
+  </div>
+
+  <script>
+    // type the wrong path into the first command
+    const el = document.getElementById('typed-path');
+    const path = window.location.pathname === '/' ? '' : window.location.pathname;
+    if (path && path !== '/daily') {
+      let i = 0;
+      const type = () => {
+        if (i < path.length) { el.textContent += path[i++]; setTimeout(type, 60); }
+      };
+      setTimeout(type, 200);
+    }
+  </script>
+</body>
+</html>

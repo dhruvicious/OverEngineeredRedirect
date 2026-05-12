@@ -50,7 +50,7 @@ app.get("/health", (_, res) => {
 
 // 404
 app.use((_, res) => {
-  res.status(404).json({ error: "Not found" });
+  res.status(404).sendFile("404.html", { root: "src" });
 });
 
 // ── Start ─────────────────────────────────────────────────────────────────────
